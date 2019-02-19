@@ -9,7 +9,7 @@ iOS uses [Image.getSize] (https://facebook.github.io/react-native/docs/image#get
 Download via NPM
 
 ```shell
-npm i -D github:exist-fragger/react-native-image-size
+npm i -S github:exist-fragger/react-native-image-size
 ```
 
 Link, either via `react-native link` or manually
