@@ -21,24 +21,20 @@ react-native link react-native-image-size
 
 **-- OR --**
 
-#### android/settings.gradle
 ```diff
+// android/settings.gradle
+// add the following at the end of the file
 +include ':react-native-image-size'
 +project(':react-native-image-size').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-image-size/android')
-```
 
-#### android/app/build.gradle
-```diff
+// android/app/build.gradle
 dependencies {
   ...
 +  implementation project(':react-native-image-size')
-  ...
 }
-```
-#### android/app/src/main/java/.../MainApplication.java
 
-```diff
-+import com.existfragger.rnimagesize.RNImageSizePackage;
+// android/app/src/main/java/.../MainApplication.java
+import com.existfragger.rnimagesize.RNImageSizePackage;
 ...
 @Override
 protected List<ReactPackage> getPackages() {
@@ -53,20 +49,21 @@ protected List<ReactPackage> getPackages() {
 ### How to use
 
 ```js
-import { getSize } from 'react-native-image-size';
+import ImageSize from 'react-native-image-size'
 ...
-getSize(uri).then(size => {
-  // do stuff with size.width, size.height
+ImageSize.getSize(uri).then(size => {
+    // size.height
+    // size.width
 })
 ```
 
 You can also use async/await, if you would prefer.
 
 ```js
-import { getSize } from 'react-native-image-size';
+import ImageSize from 'react-native-image-size'
 ...
 foo = async () => {
-  const { width, height } = await getSize(uri);
-  // do stuff with width, height
+  const { width, height } = await ImageSize.getSize(uri);
+  // do stuff with v
 }
 ```

@@ -57,6 +57,6 @@ public class RNImageSizeModule extends ReactContextBaseJavaModule {
 
     @Override
     public String getName() {
-        return "RNImageSizeModule";
+        return "RNImageSize";
     }
 }
