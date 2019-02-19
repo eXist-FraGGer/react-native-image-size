@@ -1,7 +1,8 @@
 ## react-native-image-size
 
 Android 4.0 (API level 14) introduced the ability to get orifinal image size.
-iOS uses [Image.getSize] (https://facebook.github.io/react-native/docs/image#getsize)
+
+iOS uses Image.getSize https://facebook.github.io/react-native/docs/image#getsize
 
 
 ### Installation
