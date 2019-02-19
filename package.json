@@ -1,46 +1,9 @@
 {
-  "_from": "github:exist-fragger/react-native-image-size",
-  "_id": "react-native-image-size@1.0.0",
-  "_inBundle": false,
-  "_integrity": "",
-  "_location": "/react-native-image-size",
-  "_phantomChildren": {},
-  "_requested": {
-    "type": "git",
-    "raw": "github:exist-fragger/react-native-image-size",
-    "rawSpec": "github:exist-fragger/react-native-image-size",
-    "saveSpec": "github:exist-fragger/react-native-image-size",
-    "fetchSpec": null,
-    "gitCommittish": null
-  },
-  "_requiredBy": [
-    "#USER",
-    "/"
-  ],
-  "_resolved": "github:exist-fragger/react-native-image-size#3167702eb0f2850131660aaea07810763043672f",
-  "_spec": "github:exist-fragger/react-native-image-size",
-  "_where": "/Users/anduser/Documents/Projects/OurCncReactNative",
-  "author": {
-    "name": "Ivan Sorokin"
-  },
-  "bugs": {
-    "url": "https://github.com/eXist-FraGGer/react-native-image-size/issues"
-  },
-  "bundleDependencies": false,
-  "deprecated": false,
-  "description": "Get original image size",
-  "homepage": "https://github.com/eXist-FraGGer/react-native-image-size#readme",
-  "keywords": [
-    "react",
-    "native",
-    "image",
-    "get",
-    "size",
-    "android"
-  ],
-  "license": "MIT",
-  "main": "index.js",
   "name": "react-native-image-size",
+  "description": "Get original image size",
+  "main": "index.js",
+  "author": "Ivan Sorokin <existfragger@gmail.com>",
+  "version": "1.0.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/eXist-FraGGer/react-native-image-size.git"
@@ -48,5 +11,14 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "version": "1.0.0"
+  "keywords": [
+    "react",
+    "react -native",
+    "image",
+    "get",
+    "size",
+    "android"
+    "ios"
+  ],
+  "license": "MIT",
 }
