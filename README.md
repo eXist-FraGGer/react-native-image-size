@@ -53,21 +53,20 @@ protected List<ReactPackage> getPackages() {
 ### How to use
 
 ```js
-import ImageSize from 'react-native-image-size'
+import { getSize } from 'react-native-image-size';
 ...
-ImageSize.getSize(uri).then(size => {
-    // size.height
-    // size.width
+getSize(uri).then(size => {
+  // do stuff with size.width, size.height
 })
 ```
 
 You can also use async/await, if you would prefer.
 
 ```js
-import ImageSize from 'react-native-image-size'
+import { getSize } from 'react-native-image-size';
 ...
 foo = async () => {
-  const { width, height } = await ImageSize.getSize(uri);
-  // do stuff with v
+  const { width, height } = await getSize(uri);
+  // do stuff with width, height
 }
 ```
