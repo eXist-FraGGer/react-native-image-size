@@ -1,6 +1,6 @@
 {
   "name": "react-native-image-size",
-  "description": "Get original image size",
+  "description": "Get original image size (iOS + Android)",
   "main": "index.js",
   "author": "Ivan Sorokin <existfragger@gmail.com>",
   "version": "1.0.0",
@@ -17,8 +17,8 @@
     "image",
     "get",
     "size",
-    "android"
+    "android",
     "ios"
   ],
-  "license": "MIT",
+  "license": "MIT"
 }
