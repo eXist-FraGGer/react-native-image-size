@@ -21,20 +21,24 @@ react-native link react-native-image-size
 
 **-- OR --**
 
+#### android/settings.gradle
 ```diff
-// android/settings.gradle
-// add the following at the end of the file
 +include ':react-native-image-size'
 +project(':react-native-image-size').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-image-size/android')
+```
 
-// android/app/build.gradle
+#### android/app/build.gradle
+```diff
 dependencies {
   ...
 +  implementation project(':react-native-image-size')
+  ...
 }
+```
+#### android/app/src/main/java/.../MainApplication.java
 
-// android/app/src/main/java/.../MainApplication.java
-import com.existfragger.rnimagesize.RNImageSizePackage;
+```diff
++import com.existfragger.rnimagesize.RNImageSizePackage;
 ...
 @Override
 protected List<ReactPackage> getPackages() {
