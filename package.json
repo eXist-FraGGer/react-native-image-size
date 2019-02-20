@@ -15,8 +15,11 @@
     "react",
     "react-native",
     "image",
-    "get",
     "size",
+    "dimensions",
+    "resolution",
+    "width",
+    "height,
     "android",
     "ios"
   ],
