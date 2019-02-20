@@ -1,4 +1,4 @@
-## react-native-image-size
+## react-native-image-size (iOS + Android)
 
 [![NPM version](https://badge.fury.io/js/react-native-image-size.svg)](http://badge.fury.io/js/react-native-image-size)
 
