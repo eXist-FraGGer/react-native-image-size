@@ -70,6 +70,6 @@ import ImageSize from 'react-native-image-size'
 ...
 foo = async () => {
   const { width, height } = await ImageSize.getSize(uri);
-  // do stuff with v
+  // do stuff with width and height
 }
 ```
