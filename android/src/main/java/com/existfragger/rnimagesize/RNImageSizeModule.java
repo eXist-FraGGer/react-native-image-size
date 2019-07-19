@@ -29,19 +29,20 @@ public class RNImageSizeModule extends ReactContextBaseJavaModule {
 
             int height = 0;
             int width = 0;
+            int rotation = 0;
 
             if (uri.startsWith("file://")) {
                 BitmapFactory.decodeFile(u.getPath(), options);
                 ExifInterface exifInterface = new ExifInterface(u.getPath());
                 int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
-                int rotationDegrees = 0;
-                if (orientation == ExifInterface.ORIENTATION_ROTATE_90 || orientation == ExifInterface.ORIENTATION_ROTATE_270) {
-                    height = options.outWidth;
-                    width = options.outHeight;
-                } else {
-                    height = options.outHeight;
-                    width = options.outWidth;
-                }
+                if (orientation == ExifInterface.ORIENTATION_ROTATE_90)
+                  rotation = 90;
+                else if (orientation == ExifInterface.ORIENTATION_ROTATE_180)
+                  rotation = 180;
+                else if (orientation == ExifInterface.ORIENTATION_ROTATE_270)
+                  rotation = 270;
+                height = options.outHeight;
+                width = options.outWidth;
             } else {
                 URL url = new URL(uri);
                 Bitmap bitmap = BitmapFactory.decodeStream((InputStream) url.getContent());
@@ -53,6 +54,7 @@ public class RNImageSizeModule extends ReactContextBaseJavaModule {
 
             map.putInt("height", height);
             map.putInt("width", width);
+            map.putInt("rotation", rotation);
 
             promise.resolve(map);
         } catch (Exception e) {
