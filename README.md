@@ -15,6 +15,8 @@ Download via NPM
 npm i -S react-native-image-size
 ```
 
+## Linking (for React Native <= 0.59 only, React Native >= 0.60 skip this as auto-linking should work)
+
 **-- Automaticaly --**
 
 Link, either via `react-native link` or manually
