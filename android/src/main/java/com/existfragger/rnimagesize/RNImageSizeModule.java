@@ -2,6 +2,7 @@ package com.existfragger.rnimagesize;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.ExifInterface;
 import android.net.Uri;
 
 import com.facebook.react.bridge.Arguments;
@@ -28,9 +29,18 @@ public class RNImageSizeModule extends ReactContextBaseJavaModule {
 
             int height = 0;
             int width = 0;
+            int rotation = 0;
 
             if (uri.startsWith("file://")) {
                 BitmapFactory.decodeFile(u.getPath(), options);
+                ExifInterface exifInterface = new ExifInterface(u.getPath());
+                int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
+                if (orientation == ExifInterface.ORIENTATION_ROTATE_90)
+                  rotation = 90;
+                else if (orientation == ExifInterface.ORIENTATION_ROTATE_180)
+                  rotation = 180;
+                else if (orientation == ExifInterface.ORIENTATION_ROTATE_270)
+                  rotation = 270;
                 height = options.outHeight;
                 width = options.outWidth;
             } else {
@@ -44,6 +54,7 @@ public class RNImageSizeModule extends ReactContextBaseJavaModule {
 
             map.putInt("height", height);
             map.putInt("width", width);
+            map.putInt("rotation", rotation);
 
             promise.resolve(map);
         } catch (Exception e) {
