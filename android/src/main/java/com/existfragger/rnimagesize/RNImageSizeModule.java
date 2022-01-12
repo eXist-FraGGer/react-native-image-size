@@ -43,9 +43,17 @@ public class RNImageSizeModule extends ReactContextBaseJavaModule {
                   rotation = 270;
                 height = options.outHeight;
                 width = options.outWidth;
+            } else if (uri.startsWith("content://")) {
+                BitmapFactory.decodeStream(
+                    getReactApplicationContext().getContentResolver().openInputStream(u),
+                    null,
+                    options
+                );
+                height = options.outHeight;
+                width = options.outWidth;
             } else {
-                URL url = new URL(uri);
-                Bitmap bitmap = BitmapFactory.decodeStream((InputStream) url.getContent());
+                InputStream input = this.reactContext.getContentResolver().openInputStream(Uri.parse(uri));
+                Bitmap bitmap = BitmapFactory.decodeStream((InputStream) input);
                 height = bitmap.getHeight();
                 width = bitmap.getWidth();
             }
