@@ -2,7 +2,7 @@
 
 [![NPM version](https://badge.fury.io/js/react-native-image-size.svg)](http://badge.fury.io/js/react-native-image-size)
 
-Android 4.0 (API level 14) introduced the ability to get orifinal image size.
+Android 4.0 (API level 14) introduced the ability to get original image size.
 
 iOS uses Image.getSize https://facebook.github.io/react-native/docs/image#getsize
 
@@ -13,6 +13,12 @@ Download via NPM
 
 ```shell
 npm i -S react-native-image-size
+```
+
+Download via Yarn
+
+```shell
+yarn add react-native-image-size
 ```
 
 ## Linking (for React Native <= 0.59 only, React Native >= 0.60 skip this as auto-linking should work)
