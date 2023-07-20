@@ -21,6 +21,8 @@ Download via Yarn
 yarn add react-native-image-size
 ```
 
+Afterward make sure to rebuild app, not just refresh bundler.
+
 ## Linking (for React Native <= 0.59 only, React Native >= 0.60 skip this as auto-linking should work)
 
 **-- Automaticaly --**
