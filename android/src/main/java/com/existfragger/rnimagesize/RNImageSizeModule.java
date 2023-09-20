@@ -16,8 +16,11 @@ import java.io.InputStream;
 import java.net.URL;
 
 public class RNImageSizeModule extends ReactContextBaseJavaModule {
+    private final ReactApplicationContext reactContext;
+
     public RNImageSizeModule(final ReactApplicationContext reactContext) {
         super(reactContext);
+        this.reactContext = reactContext;
     }
 
     @ReactMethod
@@ -52,7 +55,10 @@ public class RNImageSizeModule extends ReactContextBaseJavaModule {
                 height = options.outHeight;
                 width = options.outWidth;
             } else {
-                InputStream input = getReactApplicationContext().getContentResolver().openInputStream(Uri.parse(uri));
+                URL url = new URL(uri);
+                Bitmap bitmap = BitmapFactory.decodeStream((InputStream) url.getContent());
+                height = bitmap.getHeight();
+                InputStream input = this.reactContext.getContentResolver().openInputStream(Uri.parse(uri));
                 Bitmap bitmap = BitmapFactory.decodeStream((InputStream) input);
                 height = bitmap.getHeight();
                 width = bitmap.getWidth();
