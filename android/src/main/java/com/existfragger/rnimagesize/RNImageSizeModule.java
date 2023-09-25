@@ -1,5 +1,6 @@
 package com.existfragger.rnimagesize;
 
+import android.content.ContentResolver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ExifInterface;
@@ -27,42 +28,40 @@ public class RNImageSizeModule extends ReactContextBaseJavaModule {
     public void getSize(String uri, final Promise promise) {
         try {
             Uri u = Uri.parse(uri);
+            String scheme = u.getScheme();
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inJustDecodeBounds = true;
+            ExifInterface exifInterface = null;
 
             int height = 0;
             int width = 0;
             int rotation = 0;
 
-            if (uri.startsWith("file://")) {
-                BitmapFactory.decodeFile(u.getPath(), options);
-                ExifInterface exifInterface = new ExifInterface(u.getPath());
-                int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
-                if (orientation == ExifInterface.ORIENTATION_ROTATE_90)
-                  rotation = 90;
-                else if (orientation == ExifInterface.ORIENTATION_ROTATE_180)
-                  rotation = 180;
-                else if (orientation == ExifInterface.ORIENTATION_ROTATE_270)
-                  rotation = 270;
-                height = options.outHeight;
-                width = options.outWidth;
-            } else if (uri.startsWith("content://")) {
+            if (ContentResolver.SCHEME_FILE.equals(scheme) || ContentResolver.SCHEME_CONTENT.equals(scheme) || ContentResolver.SCHEME_ANDROID_RESOURCE.equals(scheme)) {
+                // ContentResolver.openInputStream() can only handle SCHEME_FILE, SCHEME_CONTENT and SCHEME_ANDROID_RESOURCE
+                // https://developer.android.com/reference/android/content/ContentResolver?hl=en#openInputStream(android.net.Uri)
+                ContentResolver contentResolver = getReactApplicationContext().getContentResolver();
                 BitmapFactory.decodeStream(
-                    getReactApplicationContext().getContentResolver().openInputStream(u),
+                    contentResolver.openInputStream(u),
                     null,
                     options
                 );
-                height = options.outHeight;
-                width = options.outWidth;
+                exifInterface = new ExifInterface(contentResolver.openInputStream(u));
             } else {
+                // ContentResolver.openInputStream() cannot handle this scheme, treat it as remote uri
                 URL url = new URL(uri);
-                Bitmap bitmap = BitmapFactory.decodeStream((InputStream) url.getContent());
-                height = bitmap.getHeight();
-                InputStream input = this.reactContext.getContentResolver().openInputStream(Uri.parse(uri));
-                Bitmap bitmap = BitmapFactory.decodeStream((InputStream) input);
-                height = bitmap.getHeight();
-                width = bitmap.getWidth();
+                BitmapFactory.decodeStream(url.openStream(), null, options);
+                exifInterface = new ExifInterface(url.openStream());
             }
+            height = options.outHeight;
+            width = options.outWidth;
+            int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
+            if (orientation == ExifInterface.ORIENTATION_ROTATE_90)
+                rotation = 90;
+            else if (orientation == ExifInterface.ORIENTATION_ROTATE_180)
+                rotation = 180;
+            else if (orientation == ExifInterface.ORIENTATION_ROTATE_270)
+                rotation = 270;
 
             WritableMap map = Arguments.createMap();
 
