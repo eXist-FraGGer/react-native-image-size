@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Build;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
@@ -46,22 +47,31 @@ public class RNImageSizeModule extends ReactContextBaseJavaModule {
                     null,
                     options
                 );
-                exifInterface = new ExifInterface(contentResolver.openInputStream(u));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    exifInterface = new ExifInterface(contentResolver.openInputStream(u));
+                } else if (ContentResolver.SCHEME_FILE.equals(scheme)) {
+                    // For SCHEME_FILE, Use ExifInterface(String filename) if the SDK version is less than 24(N)
+                    exifInterface = new ExifInterface(u.getPath());
+                }
             } else {
                 // ContentResolver.openInputStream() cannot handle this scheme, treat it as remote uri
                 URL url = new URL(uri);
                 BitmapFactory.decodeStream(url.openStream(), null, options);
-                exifInterface = new ExifInterface(url.openStream());
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    exifInterface = new ExifInterface(url.openStream());
+                }
             }
             height = options.outHeight;
             width = options.outWidth;
-            int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
-            if (orientation == ExifInterface.ORIENTATION_ROTATE_90)
-                rotation = 90;
-            else if (orientation == ExifInterface.ORIENTATION_ROTATE_180)
-                rotation = 180;
-            else if (orientation == ExifInterface.ORIENTATION_ROTATE_270)
-                rotation = 270;
+            if (exifInterface != null) {
+                int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
+                if (orientation == ExifInterface.ORIENTATION_ROTATE_90)
+                    rotation = 90;
+                else if (orientation == ExifInterface.ORIENTATION_ROTATE_180)
+                    rotation = 180;
+                else if (orientation == ExifInterface.ORIENTATION_ROTATE_270)
+                    rotation = 270;
+            }
 
             WritableMap map = Arguments.createMap();
 
