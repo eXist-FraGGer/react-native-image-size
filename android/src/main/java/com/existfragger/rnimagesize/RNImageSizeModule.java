@@ -1,9 +1,11 @@
 package com.existfragger.rnimagesize;
 
+import android.content.ContentResolver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Build;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
@@ -27,38 +29,48 @@ public class RNImageSizeModule extends ReactContextBaseJavaModule {
     public void getSize(String uri, final Promise promise) {
         try {
             Uri u = Uri.parse(uri);
+            String scheme = u.getScheme();
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inJustDecodeBounds = true;
+            ExifInterface exifInterface = null;
 
             int height = 0;
             int width = 0;
             int rotation = 0;
 
-            if (uri.startsWith("file://")) {
-                BitmapFactory.decodeFile(u.getPath(), options);
-                ExifInterface exifInterface = new ExifInterface(u.getPath());
-                int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
-                if (orientation == ExifInterface.ORIENTATION_ROTATE_90)
-                  rotation = 90;
-                else if (orientation == ExifInterface.ORIENTATION_ROTATE_180)
-                  rotation = 180;
-                else if (orientation == ExifInterface.ORIENTATION_ROTATE_270)
-                  rotation = 270;
-                height = options.outHeight;
-                width = options.outWidth;
-            } else if (uri.startsWith("content://")) {
+            if (ContentResolver.SCHEME_FILE.equals(scheme) || ContentResolver.SCHEME_CONTENT.equals(scheme) || ContentResolver.SCHEME_ANDROID_RESOURCE.equals(scheme)) {
+                // ContentResolver.openInputStream() can only handle SCHEME_FILE, SCHEME_CONTENT and SCHEME_ANDROID_RESOURCE
+                // https://developer.android.com/reference/android/content/ContentResolver?hl=en#openInputStream(android.net.Uri)
+                ContentResolver contentResolver = getReactApplicationContext().getContentResolver();
                 BitmapFactory.decodeStream(
-                    getReactApplicationContext().getContentResolver().openInputStream(u),
+                    contentResolver.openInputStream(u),
                     null,
                     options
                 );
-                height = options.outHeight;
-                width = options.outWidth;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    exifInterface = new ExifInterface(contentResolver.openInputStream(u));
+                } else if (ContentResolver.SCHEME_FILE.equals(scheme)) {
+                    // For SCHEME_FILE, Use ExifInterface(String filename) if the SDK version is less than 24(N)
+                    exifInterface = new ExifInterface(u.getPath());
+                }
             } else {
-                InputStream input = this.reactContext.getContentResolver().openInputStream(Uri.parse(uri));
-                Bitmap bitmap = BitmapFactory.decodeStream((InputStream) input);
-                height = bitmap.getHeight();
-                width = bitmap.getWidth();
+                // ContentResolver.openInputStream() cannot handle this scheme, treat it as remote uri
+                URL url = new URL(uri);
+                BitmapFactory.decodeStream(url.openStream(), null, options);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    exifInterface = new ExifInterface(url.openStream());
+                }
+            }
+            height = options.outHeight;
+            width = options.outWidth;
+            if (exifInterface != null) {
+                int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
+                if (orientation == ExifInterface.ORIENTATION_ROTATE_90)
+                    rotation = 90;
+                else if (orientation == ExifInterface.ORIENTATION_ROTATE_180)
+                    rotation = 180;
+                else if (orientation == ExifInterface.ORIENTATION_ROTATE_270)
+                    rotation = 270;
             }
 
             WritableMap map = Arguments.createMap();
