@@ -1,6 +1,8 @@
 package com.existfragger.rnimagesize;
 
 import android.content.ContentResolver;
+import android.content.res.AssetManager;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ExifInterface;
@@ -15,10 +17,14 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
 
 import java.io.InputStream;
+import java.lang.Integer;
 import java.net.URL;
 
 public class RNImageSizeModule extends ReactContextBaseJavaModule {
     private final ReactApplicationContext reactContext;
+
+    public static final String LOCAL_ASSET_SCHEME = "asset";
+    public static final String LOCAL_RESOURCE_SCHEME = "res";
 
     public RNImageSizeModule(final ReactApplicationContext reactContext) {
         super(reactContext);
@@ -52,6 +58,20 @@ public class RNImageSizeModule extends ReactContextBaseJavaModule {
                 } else if (ContentResolver.SCHEME_FILE.equals(scheme)) {
                     // For SCHEME_FILE, Use ExifInterface(String filename) if the SDK version is less than 24(N)
                     exifInterface = new ExifInterface(u.getPath());
+                }
+            } else if (LOCAL_ASSET_SCHEME.equals(scheme)) {
+                AssetManager assetManager = getReactApplicationContext().getAssets();
+                String assetName = u.getPath().substring(1);
+                BitmapFactory.decodeStream(assetManager.open(assetName), null, options);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    exifInterface = new ExifInterface(assetManager.open(assetName));
+                }
+            } else if (LOCAL_RESOURCE_SCHEME.equals(scheme)) {
+                Resources resources = getReactApplicationContext().getResources();
+                int resourceId = Integer.parseInt(u.getPath().substring(1));
+                BitmapFactory.decodeStream(resources.openRawResource(resourceId), null, options);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    exifInterface = new ExifInterface(resources.openRawResource(resourceId));
                 }
             } else {
                 // ContentResolver.openInputStream() cannot handle this scheme, treat it as remote uri
