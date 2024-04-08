@@ -4,12 +4,19 @@
   "main": "index.js",
   "author": "Ivan Sorokin <existfragger@gmail.com>",
   "version": "1.1.6",
+  "source": "index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/eXist-FraGGer/react-native-image-size.git"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "peerDependencies": {
+    "react-native": "*"
+  },
+  "devDependencies": {
+    "react-native": "^0.73.6"
   },
   "homepage": "https://github.com/eXist-FraGGer/react-native-image-size#readme",
   "keywords": [

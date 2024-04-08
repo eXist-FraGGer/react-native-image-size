@@ -1,1 +1,1 @@
-module.exports = require('./js/RNImageSize');
+export { default } from "./js/RNImageSize";
