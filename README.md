@@ -1,5 +1,15 @@
 ## react-native-image-size (iOS + Android)
 
+---
+
+Friends, sorry, but I can't now support this project as too busy and I am not working with react-native projects already few years....
+
+If someone believes that he can support the project - let me know and I can add you to the Collaborators
+(existfragger@gmail.com)
+
+---
+
+
 [![NPM version](https://badge.fury.io/js/react-native-image-size.svg)](http://badge.fury.io/js/react-native-image-size)
 
 Android 4.0 (API level 14) introduced the ability to get original image size.
