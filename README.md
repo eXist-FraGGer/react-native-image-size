@@ -1,95 +1,47 @@
-## react-native-image-size (iOS + Android)
+# react-native-image-size
 
----
+## Compatibility
+| Dependency       | Version Requirement |
+|------------------|---------------------|
+| React Native     | >= 0.80.0           |
+| Android          | API 21+ (SDK 34)    |
+| iOS              | 12.0+ (JS-only)     |
+| Gradle           | 9.0+                |
 
-Friends, sorry, but I can't now support this project as too busy and I am not working with react-native projects already few years....
+## How It Works
+- **Android**: Uses a native module to read image dimensions and EXIF rotation.
+- **iOS**: Wraps React Native's built-in [`Image.getSize`](https://reactnative.dev/docs/image#getsize) (no native code required).
 
-If someone believes that he can support the project - let me know and I can add you to the Collaborators
-(existfragger@gmail.com)
+## Installation (Local Development)
+1. **Copy the library** into your project (e.g., `libraries/react-native-image-size`).
+2. **Add to `package.json`:**
+   ```json
+   "dependencies": {
+     "react-native-image-size": "file:./libraries/react-native-image-size"
+   }
+   ```
+3. **Install dependencies:**
+   ```bash
+   yarn install
+   ```
+4. **Rebuild your app:**
+   ```bash
+   npx react-native run-android  # or run-ios
+   ```
 
----
+## Usage
+```javascript
+import { getSize } from 'react-native-image-size';
 
-
-[![NPM version](https://badge.fury.io/js/react-native-image-size.svg)](http://badge.fury.io/js/react-native-image-size)
-
-Android 4.0 (API level 14) introduced the ability to get original image size.
-
-iOS uses Image.getSize https://facebook.github.io/react-native/docs/image#getsize
-
-
-### Installation
-
-Download via NPM
-
-```shell
-npm i -S react-native-image-size
+// Works on both platforms (rotation is 0 on iOS)
+const { width, height, rotation } = await getSize('https://example.com/image.jpg');
+console.log(width, height, rotation);
 ```
 
-Download via Yarn
+## Troubleshooting
+### Android
+- **"Module not found"**: Verify the path in `package.json`.
+- **Linking errors**: Run `npx react-native clean` and rebuild.
 
-```shell
-yarn add react-native-image-size
-```
-
-Afterward make sure to rebuild app, not just refresh bundler.
-
-## Linking (for React Native <= 0.59 only, React Native >= 0.60 skip this as auto-linking should work)
-
-**-- Automaticaly --**
-
-Link, either via `react-native link` or manually
-
-```shell
-react-native link react-native-image-size
-```
-
-**-- Manually --**
-
-#### android/settings.gradle
-```diff
-+include ':react-native-image-size'
-+project(':react-native-image-size').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-image-size/android')
-```
-#### android/app/build.gradle
-```diff
-dependencies {
-  ...
-+  implementation project(':react-native-image-size')
-  ...
-}
-```
-#### android/app/src/main/java/.../MainApplication.java
-```diff
-+import com.existfragger.rnimagesize.RNImageSizePackage;
-...
-@Override
-protected List<ReactPackage> getPackages() {
-  return Arrays.<~>asList(
--    new MainReactPackage()
-+    new MainReactPackage(),
-+    new RNImageSizePackage()
-  );
-}
-```
-
-### How to use
-
-```js
-import ImageSize from 'react-native-image-size'
-...
-ImageSize.getSize(uri).then(size => {
-    // size.height
-    // size.width
-})
-```
-
-You can also use async/await, if you would prefer.
-
-```js
-import ImageSize from 'react-native-image-size'
-...
-foo = async () => {
-  const { width, height } = await ImageSize.getSize(uri);
-  // do stuff with width and height
-}
-```
+### iOS
+- Ensure your project uses React Native 0.80+ (no native linking required).
